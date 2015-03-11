@@ -148,7 +148,7 @@ public class Application implements IApplication {
   
   @Override
   public String getAuthorEmail() {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+      return "sacha.bron@heig-vd.ch";
   }
 
   @Override
