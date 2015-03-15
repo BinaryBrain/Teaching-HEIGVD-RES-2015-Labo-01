@@ -3,6 +3,7 @@ package ch.heigvd.res.lab01.impl.filters;
 import java.io.FilterWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -16,8 +17,52 @@ import java.util.logging.Logger;
  * @author Olivier Liechti
  */
 public class FileNumberingFilterWriter extends FilterWriter {
+  private int lineNumber = 1;
+  private boolean firstCall = true;
+  private char lastChar;
 
   private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
+
+  private String filter(char[] str) {
+    String newStr = "";
+
+    if (firstCall) {
+      newStr += lineNumber++;
+      newStr += '\t';
+      firstCall = false;
+    }
+
+    for (char c : str) {
+      switch (c) {
+        case '\n':
+          if (lastChar == '\r') {
+            newStr += lastChar;
+          }
+
+          newStr += c;
+          newStr += lineNumber++;
+          newStr += '\t';
+          break;
+
+        case '\r':
+          break;
+
+        default:
+          if (lastChar == '\r') {
+            newStr += lastChar;
+            newStr += lineNumber++;
+            newStr += '\t';
+          }
+
+          newStr += c;
+          break;
+      }
+
+      lastChar = c;
+    }
+
+    return newStr;
+  }
 
   public FileNumberingFilterWriter(Writer out) {
     super(out);
@@ -25,17 +70,18 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
   @Override
   public void write(String str, int off, int len) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    String toWrite = str.substring(off, off + len);
+    toWrite = filter(toWrite.toCharArray());
+    out.write(toWrite);
   }
 
   @Override
   public void write(char[] cbuf, int off, int len) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    write(new String(cbuf), off, len);
   }
 
   @Override
   public void write(int c) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    write(Character.toString((char) c), 0, 1);
   }
-
 }
