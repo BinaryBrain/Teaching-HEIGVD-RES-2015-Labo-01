@@ -20,7 +20,67 @@ public class Utils {
    * contain any line separator, then the first element is an empty string.
    */
   public static String[] getNextLine(String lines) {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
-  }
+    String[] array = new String[2];
+    String firstLine = "";
+    String secondLine = "";
+    boolean firstLineComplete = false;
+    boolean stop = false;
+    boolean newLineAtEnd = true;
+    int lastPos = 0;
 
+    for (int i = 0; i < lines.length() && !stop; i++) {
+      char c = lines.charAt(i);
+
+      switch (c) {
+        case '\r':
+          if (i != lines.length() - 1 && lines.charAt(i+1) != '\r' && lines.charAt(i+1) != '\n') {
+            firstLine += c;
+            firstLineComplete = true;
+          } else {
+            firstLine += c;
+          }
+          break;
+
+        case '\n':
+          if (i != lines.length() - 1 && lines.charAt(i+1) != '\r' && lines.charAt(i+1) != '\n') {
+            firstLine += c;
+            firstLineComplete = true;
+          } else {
+            firstLine += c;
+          }
+          break;
+
+        default:
+          firstLine += c;
+
+          if (i == lines.length() - 1) {
+            newLineAtEnd = false;
+          }
+
+          break;
+      }
+
+      if (firstLineComplete) {
+        lastPos = i;
+        stop = true;
+      }
+    }
+
+    secondLine = lines.substring(lastPos+1);
+
+    if (newLineAtEnd) {
+      if (!firstLineComplete) {
+        array[0] = firstLine;
+        array[1] = "";
+      } else {
+        array[0] = firstLine;
+        array[1] = secondLine;
+      }
+    } else {
+      array[0] = "";
+      array[1] = lines;
+    }
+
+    return array;
+  }
 }
