@@ -3,8 +3,6 @@ package ch.heigvd.res.lab01.impl.filters;
 import java.io.FilterWriter;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * This class transforms the streams of character sent to the decorated writer.
@@ -20,8 +18,6 @@ public class FileNumberingFilterWriter extends FilterWriter {
   private int lineNumber = 1;
   private boolean firstCall = true;
   private char lastChar;
-
-  private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
 
   private String filter(char[] str) {
     String newStr = "";

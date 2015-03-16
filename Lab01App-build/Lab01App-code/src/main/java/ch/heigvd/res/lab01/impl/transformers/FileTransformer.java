@@ -4,14 +4,11 @@ import ch.heigvd.res.lab01.interfaces.IFileVisitor;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FilterWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -28,7 +25,6 @@ import java.util.logging.Logger;
 public abstract class FileTransformer implements IFileVisitor {
 
   private static final Logger LOG = Logger.getLogger(FileTransformer.class.getName());
-  private final List<FilterWriter> filters = new ArrayList<>();
   
   /**
    * The subclasses implement this method to define what transformation(s) are
@@ -52,6 +48,12 @@ public abstract class FileTransformer implements IFileVisitor {
       Reader reader = new InputStreamReader(new FileInputStream(file), "UTF-8");
       Writer writer = new OutputStreamWriter(new FileOutputStream(file.getPath()+ ".out"));
       writer = decorateWithFilters(writer);
+
+      int c;
+
+      while ((c = reader.read()) != -1) {
+        writer.write(c);
+      }
 
       /*
        * There is a missing piece here: you have an input reader and an ouput writer (notice how the 
